@@ -19,7 +19,7 @@ class LoginView(View):
 
     def post(self, request):
         """
-
+        用户登录
         Args:
             request:
 
@@ -164,3 +164,29 @@ class BookView(View):
         Returns:
 
         """
+        # 状态认证
+        if not request.user.is_authenticated:
+            res = {
+                "code":2002,
+                "message":"Authentication failed, you do not have access rights"
+            }
+            return JsonResponse(res)
+        #获取参数
+        id = request.GET.get('id',None)
+        #检查参数
+        #检查数据是否为空
+        if not id:
+            return JsonResponse({"code":2002,"message":"id  error"})
+        #检查数据类型
+        if not isinstance(id,str):
+            return JsonResponse({"code":2003,"message":"id error"})
+        
+        #删除图书
+        try:
+            books=Books.objects.get(id=id)
+        except Exception as e:
+            # 如果删除失败
+            return JsonResponse({"code":2003,"message":f"books id:{id} info error:{e}"})
+        else:
+            books.delete()
+            return JsonResponse({"code":1000,"message":f"books id:{id} delete success"})
