@@ -1,11 +1,12 @@
 import json
 
 from django.contrib.auth import authenticate, login, logout
+from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views import View
 
-from booksmanage.models import Books
+from booksmanage.models import Books, Record
 
 
 # Create your views here.
@@ -190,3 +191,73 @@ class BookView(View):
         else:
             books.delete()
             return JsonResponse({"code":1000,"message":f"books id:{id} delete success"})
+
+
+class RecordView(View):
+    """
+    接书还书接口
+    """
+    def post(self, request):
+        """
+        借书接口
+        Args:
+            request:
+
+        Returns:
+
+        """
+        # 1.状态认证
+        if not request.user.is_authenticated:
+            res = {
+                "code":2002,
+                "message":"Authentication failed, you do not have access rights"
+            }
+            return JsonResponse(res)
+        # 2.获取参数(同时支持json和表单参数)
+        params = request.POST if len(request.POST) else json.loads(request.body)
+
+        # 获取要借的书籍
+        book_id = params.get('book')
+        # 获取借书人名称
+        name = params.get('name')
+
+        # 3.检查参数
+        #检查数据是否为空
+        if not (book_id and name):
+            return JsonResponse({"code":2002,"message":"book_id or name error"})
+        #检查数据类型
+        if not isinstance(book_id,str):
+            return JsonResponse({"code":2003,"message":"book_id error"})
+        #检查数据类型
+        if not isinstance(name,str):
+            return JsonResponse({"code":2003,"message":f"name:{name} error"})
+        # 检查book_id是存在
+        try:
+            book=Books.objects.get(id=book_id)
+        except Exception as e:
+            return JsonResponse({"code":2001,"message":f"book_id:{book_id} info not found"})
+
+        #检查书籍的状态是否
+        if book.status:
+            return JsonResponse({"code":2001,"message":f"book_id:{book} was lent , please confirm {book} was returned"})
+
+        # 4.借书操作
+        # 添加事务机制
+        with transaction.atomic():
+            #修改图书操作
+            book.status = True
+            # 添加借书记录
+            Record.objects.create(book=book,name=name)
+            return JsonResponse({"code":1000,"message":f"book:{book} let successful"})
+
+
+
+    def patch(self, request):
+        """
+        还书接口
+        Args:
+            request:
+
+        Returns:
+
+        """

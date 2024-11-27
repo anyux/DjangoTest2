@@ -4,11 +4,10 @@ from django.db import models
 
 
 # Create your models here.
-
 class Books(models.Model):
     id = models.CharField(max_length=20, primary_key=True, verbose_name="图书编号")
-    name = models.CharField(max_length=50, verbose_name="书名")
-    status = models.BooleanField(default=False, verbose_name="是否出借")
+    name = models.CharField(max_length=50, verbose_name="书名",db_column="name",db_comment="书名")
+    status = models.BooleanField(default=False,verbose_name="是否出借", help_text="是否出借,False表示未出借,True表示出借")
 
     class Meta:
         db_table = 'books'

@@ -25,4 +25,5 @@ urlpatterns = [
        re_path(r'^user/login/?$', booksmanage_views.LoginView.as_view(), name='login'),
        re_path(r'^user/logout/?$', booksmanage_views.LogoutView.as_view(), name='logout'),
        re_path(r'^books/?$', booksmanage_views.BookView.as_view(), name='book'),
+       re_path(r'^books/handler?$', booksmanage_views.RecordView.as_view(), name='book'),
 ]
