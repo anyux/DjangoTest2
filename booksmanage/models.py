@@ -5,9 +5,9 @@ from django.db import models
 
 # Create your models here.
 class Books(models.Model):
-    id = models.CharField(max_length=20, primary_key=True, verbose_name="图书编号")
-    name = models.CharField(max_length=50, verbose_name="书名",db_column="name",db_comment="书名")
-    status = models.BooleanField(default=False,verbose_name="是否出借", help_text="是否出借,False表示未出借,True表示出借")
+    id = models.CharField(max_length=20, primary_key=True, verbose_name="图书编号",help_text="图书编号")
+    name = models.CharField(max_length=50, verbose_name="书名",help_text="书名")
+    status = models.BooleanField(default=False,verbose_name="是否出借,False表示未出借,True表示出借")
 
     class Meta:
         db_table = 'books'
@@ -25,7 +25,7 @@ class Record(models.Model):
     # auto_now=True:当数据任何一个字段发生修改,都自动更新时间
     s_date = models.DateTimeField(verbose_name="出借时间", auto_now_add=True, auto_created=True)
     e_date = models.DateTimeField(verbose_name="归还时间", auto_now=True, auto_created=True)
-    state = models.BooleanField(default=False, verbose_name="是否归还")
+    state = models.BooleanField(default=False, verbose_name="是否归还",db_comment="是否归还,False表示归,True表示出借")
 
     class Meta:
         db_table = 'record'

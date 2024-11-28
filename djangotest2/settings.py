@@ -38,10 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    "django-db-comments",
     # 'news',
     # 'books',
-    'booksmanage',
+    'booksmanage'
 ]
 
 MIDDLEWARE = [
@@ -72,7 +71,7 @@ TEMPLATES = [
         },
     },
 ]
-print(TEMPLATES)
+
 WSGI_APPLICATION = 'djangotest2.wsgi.application'
 
 
