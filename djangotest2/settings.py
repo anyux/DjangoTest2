@@ -38,12 +38,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     # 'news',
     # 'books',
     'booksmanage'
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -52,6 +54,17 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+#CORS
+#对外开放白名单
+# CORS_ORIGIN_ALLOW_ALL = True
+#允许跨域操作session会放
+CORS_ALLOW_CREDENTIALS = True
+#指定可以访问的跨域ip或域名
+CORS_ORIGIN_WHITELIST = (
+    'http://127.0.0.1:8080',
+    "http://192.168.8.101:8080",
+)
 
 ROOT_URLCONF = 'djangotest2.urls'
 

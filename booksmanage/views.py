@@ -55,6 +55,7 @@ class LoginView(View):
 
         user = authenticate(username=username, password=password)
         if user:
+            print(user)
             login(request, user)
             return JsonResponse({"status": 200, "msg": "ok"})
         else:
