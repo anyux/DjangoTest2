@@ -57,7 +57,7 @@ class LoginView(View):
         if user:
             print(user)
             login(request, user)
-            return JsonResponse({"status": 200, "msg": "ok"})
+            return JsonResponse({"status": 200, "msg": "login success"})
         else:
             return JsonResponse({"status": 403, "msg": "username or password error"})
 
@@ -271,9 +271,10 @@ class RecordView(View):
                 "message":"Authentication failed, you do not have access rights"
             }
             return JsonResponse(res)
-        # 2.通过GET庐江获取参数
-        params = request.GET
+        # 2.获取参数(同时支持json和表单参数)
+        params = request.POST if len(request.POST) else json.loads(request.body)
 
+        print(params)
         # 获取要借的书籍
         book_id = params.get('book')
         # 获取借书人名称
